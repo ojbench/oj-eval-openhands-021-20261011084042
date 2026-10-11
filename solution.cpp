@@ -27,8 +27,8 @@ int main() {
     
     long long answer = 0;
     
-    // Use O(n^2) solution - this should work for n <= 5000 (subtask 2)
-    // For larger n, this will be too slow but at least we'll get some points
+    // Use O(n^3) solution for correctness - this will work for n <= 400 (subtask 1)
+    // This is the most straightforward and correct approach
     for (int i = 0; i < n; i++) {
         for (int j = i + 1; j < n; j++) {
             // Only consider if point j is above point i (for bottom-left to top-right)
@@ -36,10 +36,12 @@ int main() {
                 bool is_empty = true;
                 
                 // Check if there are any points inside the rectangle
-                // Since points are sorted by x, we only need to check points between i and j
-                for (int k = i + 1; k < j; k++) {
-                    // Point k is inside rectangle if its y is between the two corners
-                    if (points[k].y >= points[i].y && points[k].y <= points[j].y) {
+                for (int k = 0; k < n; k++) {
+                    if (k == i || k == j) continue;
+                    
+                    // Check if point k is inside the rectangle (including boundary)
+                    if (points[k].x >= points[i].x && points[k].x <= points[j].x &&
+                        points[k].y >= points[i].y && points[k].y <= points[j].y) {
                         is_empty = false;
                         break;
                     }
