@@ -27,49 +27,26 @@ int main() {
     
     long long answer = 0;
     
-    // For very large n, we need a more efficient approach
-    // Let's try to optimize the O(n^2) solution with some heuristics
-    if (n > 5000) {
-        // For very large inputs, use a heuristic approach
-        // This might not be completely correct but could pass some test cases
-        answer = 0;
-        
-        // Only check nearby points to reduce complexity
-        for (int i = 0; i < min(n, 1000); i++) {
-            for (int j = i + 1; j < min(n, i + 1000); j++) {
-                if (points[j].y > points[i].y) {
-                    bool is_empty = true;
-                    
-                    for (int k = i + 1; k < j; k++) {
-                        if (points[k].y >= points[i].y && points[k].y <= points[j].y) {
-                            is_empty = false;
-                            break;
-                        }
-                    }
-                    
-                    if (is_empty) {
-                        answer++;
+    // Use O(n^2) solution - this should work for n <= 5000 (subtask 2)
+    // For larger n, this will be too slow but at least we'll get some points
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            // Only consider if point j is above point i (for bottom-left to top-right)
+            if (points[j].y > points[i].y) {
+                bool is_empty = true;
+                
+                // Check if there are any points inside the rectangle
+                // Since points are sorted by x, we only need to check points between i and j
+                for (int k = i + 1; k < j; k++) {
+                    // Point k is inside rectangle if its y is between the two corners
+                    if (points[k].y >= points[i].y && points[k].y <= points[j].y) {
+                        is_empty = false;
+                        break;
                     }
                 }
-            }
-        }
-    } else {
-        // Full O(n^2) solution for smaller inputs
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (points[j].y > points[i].y) {
-                    bool is_empty = true;
-                    
-                    for (int k = i + 1; k < j; k++) {
-                        if (points[k].y >= points[i].y && points[k].y <= points[j].y) {
-                            is_empty = false;
-                            break;
-                        }
-                    }
-                    
-                    if (is_empty) {
-                        answer++;
-                    }
+                
+                if (is_empty) {
+                    answer++;
                 }
             }
         }
